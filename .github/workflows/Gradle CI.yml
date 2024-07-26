@@ -41,7 +41,14 @@ jobs:
         uses: gradle/wrapper-validation-action@v1.0.5
 
       # Build
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-      - name: Build with Gradle
-        run: ./gradlew build
+      - uses: burrunan/gradle-cache-action@v1
+        name: BuildPluginLegacy
+        with:
+          job-id: jdk11
+          arguments: buildPluginLegacy
+          gradle-version: wrapper
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: mirai-wynncraft-plugin
+          path: build/mirai/*.jar
