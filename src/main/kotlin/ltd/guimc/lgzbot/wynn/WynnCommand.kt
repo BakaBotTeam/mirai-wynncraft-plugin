@@ -41,6 +41,10 @@ object WynnCommand : CompositeCommand(
             "所在服务器: $server"))
 
         playerSelection.player.characters.values.forEach {character ->
+            var dungeonsInfo = ""
+            var questsInfo = ""
+            character.dungeons.list.forEach { dungeon -> dungeonsInfo += "  * ${dungeon.key}: ${dungeon.value}\n" }
+            character.quests.forEach { quest -> questsInfo += "  * $quest\n" }
             outputMessage.add(bot!!, PlainText("档案信息:\n" +
                 "档案名称: ${character.nickname}\n" +
                 "档案 UUID: ${
@@ -53,8 +57,8 @@ object WynnCommand : CompositeCommand(
                 "死亡次数: ${character.deaths}\n" +
                 "击杀生物数: ${character.mobsKilled}\n" +
                 "移动距离: ${character.blocksWalked}b\n" +
-                "已探索数量: ${character.discoveries}b\n" +
-                "找到的箱子: ${character.chestsFound}b\n" +
+                "已探索数量: ${character.discoveries}\n" +
+                "找到的箱子: ${character.chestsFound}\n" +
                 "技能点信息:\n" +
                 "  * Strength: ${character.skillPoints.strength}\n" +
                 "  * Dexterity: ${character.skillPoints.dexterity}\n" +
@@ -76,10 +80,12 @@ object WynnCommand : CompositeCommand(
                 "  * Woodworking: ${character.professions.woodworking.level}\n" +
                 "  * Armouring: ${character.professions.armouring.level}\n" +
                 "地下城探索总数: ${character.dungeons.total}\n" +
-                character.dungeons.list.forEach { dungeon -> "  * ${dungeon.key}: ${dungeon.value}\n" } +
+                dungeonsInfo +
                 "已完成的任务 (总数: ${character.quests.size})\n" +
-                character.quests.forEach { quest -> "  * $quest\n" }
+                questsInfo
                 ))
         }
+
+        sendMessage(outputMessage.build())
     }
 }
