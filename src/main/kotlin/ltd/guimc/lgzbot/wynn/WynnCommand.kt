@@ -43,10 +43,30 @@ object WynnCommand : CompositeCommand(
         playerSelection.player.characters.values.forEach {character ->
             var dungeonsInfo = ""
             var questsInfo = ""
-            character.dungeons.list.forEach { dungeon -> dungeonsInfo += "  * ${dungeon.key}: ${dungeon.value}\n" }
-            character.quests.forEach { quest -> questsInfo += "  * $quest\n" }
+            if (character.dungeons != null) {
+                dungeonsInfo += "地下城探索总数: ${character.dungeons.total}\n"
+                for (dungeon in character.dungeons.list) {
+                    if (dungeonsInfo.lines().size <= 5) {
+                        dungeonsInfo += "  * $dungeon\n"
+                    } else {
+                        dungeonsInfo += "And more...\n"
+                        break
+                    }
+                }
+            }
+            if (character.quests != null) {
+                questsInfo += "已完成的任务 (总数: ${character.quests.size})\n"
+                for (quest in character.quests) {
+                    if (questsInfo.lines().size <= 5) {
+                        questsInfo += "  * $quest\n"
+                    } else {
+                        questsInfo += "And more...\n"
+                        break
+                    }
+                }
+            }
             outputMessage.add(bot!!, PlainText("档案信息:\n" +
-                "档案名称: ${character.nickname}\n" +
+                "档案名称: ${character.nickname?:playerName}\n" +
                 "档案 UUID: ${
                     playerSelection.player.characters.keys.firstOrNull { playerSelection.player.characters[it] == character }
                         .toString()}\n" +
@@ -79,9 +99,7 @@ object WynnCommand : CompositeCommand(
                 "  * Tailoring: ${character.professions.tailoring.level}\n" +
                 "  * Woodworking: ${character.professions.woodworking.level}\n" +
                 "  * Armouring: ${character.professions.armouring.level}\n" +
-                "地下城探索总数: ${character.dungeons.total}\n" +
                 dungeonsInfo +
-                "已完成的任务 (总数: ${character.quests.size})\n" +
                 questsInfo
                 ))
         }
