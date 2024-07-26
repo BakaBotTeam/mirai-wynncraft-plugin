@@ -3,11 +3,21 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.serialization") version kotlinVersion
 
-    id("net.mamoe.mirai-console") version "2.13.2"
+    id("net.mamoe.mirai-console") version "2.16.0"
 }
 
-group = "org.example"
+group = "ltd.guimc.lgzbot.wynn"
 version = "0.1.0"
+
+dependencies {
+    val overflow_version = "2.16.0-db61867-SNAPSHOT"
+    implementation(kotlin("stdlib"))
+
+    compileOnly("top.mrxiaom:overflow-core-api:$overflow_version")
+    compileOnly("top.mrxiaom:overflow-core:$overflow_version")
+
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+}
 
 repositories {
     if (System.getenv("CI")?.toBoolean() != true) {
