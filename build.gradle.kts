@@ -20,8 +20,19 @@ dependencies {
 }
 
 repositories {
-    if (System.getenv("CI")?.toBoolean() != true) {
-        maven("https://maven.aliyun.com/repository/public") // 阿里云国内代理仓库
-    }
+    maven("https://maven.aliyun.com/repository/public") // 阿里云国内代理仓库
+    maven { url = uri("https://repo.repsy.io/mvn/chrynan/public") }
+    maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
     mavenCentral()
+}
+
+mirai {
+    noTestCore = true
+    setupConsoleTestRuntime {
+        // 移除 mirai-core 依赖
+        classpath = classpath.filter {
+            !it.nameWithoutExtension.startsWith("mirai-core-jvm") ||
+                    !it.nameWithoutExtension.startsWith("overflow-api")
+        }
+    }
 }
